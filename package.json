@@ -25,6 +25,7 @@
   "homepage": "https://github.com/iSirThijs/jungle-gym-api#readme",
   "devDependencies": {
     "@types/express": "^4.17.11",
+    "@types/mongoose": "^5.10.5",
     "@typescript-eslint/eslint-plugin": "^4.23.0",
     "@typescript-eslint/parser": "^4.23.0",
     "dotenv": "^9.0.2",
@@ -37,6 +38,8 @@
     "mongoose": "^5.12.9"
   },
   "imports": {
-    "#server": "./build/server.js"
+    "#server": "./build/server.js",
+    "#mock/*": "./build/mock/*.js",
+    "#models/*": "./build/models/*.js"
   }
 }
