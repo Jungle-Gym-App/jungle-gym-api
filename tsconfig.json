@@ -13,7 +13,9 @@
     "forceConsistentCasingInFileNames": true,        /* Disallow inconsistently-cased references to the same file. */
     "baseUrl": "./src",
     "paths": {
-      "#server": ["server"]
+      "#server": ["server"],
+      "#mock/*": ["mock/*"],
+      "#models/*": ["models/*"]
     } 
   }
 }

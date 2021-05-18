@@ -38,6 +38,8 @@
     "mongoose": "^5.12.9"
   },
   "imports": {
-    "#server": "./build/server.js"
+    "#server": "./build/server.js",
+    "#mock/*": "./build/mock/*.js",
+    "#models/*": "./build/models/*.js"
   }
 }

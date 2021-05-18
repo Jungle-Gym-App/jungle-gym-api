@@ -1,7 +1,8 @@
-import { Schema } from "mongoose";
+import mongoose from 'mongoose'
+const { Schema } = mongoose
 
 export enum category {
-	tikspel ='tikspel',
+	tik ='tikspel',
 	bal = 'balspel',
 	loop = 'loopspel',
 	reactie = 'reactiespel'
@@ -14,18 +15,18 @@ export enum materialName {
 }
 
 export interface material {
-	name: materialName;
-	amount?: number | string;
-	notes?: string;
+	name: materialName
+	amount?: number | string
+	notes?: string
 }
 
 export interface GameVariations {
-	title: string,
+	description: string,
 	actions: string[]
 }
 
 export interface Game {
-	title: string
+	name: string
 	description: string
 	category: category
 	materials: material[]
@@ -36,7 +37,7 @@ export interface Game {
 }
 
 const gameSchema = new Schema<Game>({
-	title: { type: String, required: true },
+	name: { type: String, required: true },
 	description:  { type: String, required: true },
 	category:  { type: String, required: true, enum: ['tikspel', 'balspel', 'loopspel', 'reactiespel']},
 	materials: [
@@ -50,7 +51,7 @@ const gameSchema = new Schema<Game>({
 	targetGroup: { type: Number, required: true },
 	rules: [{type: String}],
 	variation: [{
-		title: {type: String, required: true},
+		description: {type: String, required: true},
 		actions: [{type: String, required: true}]
 	}]
 })
