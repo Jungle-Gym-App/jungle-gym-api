@@ -1,8 +1,9 @@
 import { readFileSync } from 'fs'
-import api from '#server'
 import * as HTTPS from 'https'
 import * as HTTP from 'http'
 import { AddressInfo } from 'net'
+
+import api from '#server'
 
 const getPort = (server: HTTPS.Server | HTTP.Server) => {
 	const adressInfo: AddressInfo | string | null = server.address()

@@ -19,42 +19,52 @@ const options: ConnectOptions = {
 class Database {
 	private connection: Connection | Promise<Connection> | null = null
 	private backOff = 0
+	uri: string;
+	options?: ConnectOptions
 
-	connect(uri: string, options?: ConnectOptions) {
-		this.connection = createConnection(uri, options)
-		// Database Events 
-		// Rejection - only if initial connection failed (Mongoose will NOT attempt to reconnect)
-		if(this.connection instanceof Promise) {
-			this.connection.catch(() => {
-				if(this.backOff > 10) this.backOff = 10
-				console.log(`[DB] Cannot connect, retrying in ${this.backOff} minutes`)
-				this.connection = null
-				setTimeout(this.connect.bind(this), this.backOff++ * 1000 * 60)
-			})
-		}
-
-		if(this.connection instanceof Connection) {
-			const {name, host} = this.connection
-
-			this.connection.on('open', () => {
-				console.log(`[DB] connection with ${name} on ${host}`)			
-				this.backOff = 1
-			})
-	
-			// Disconnection - Mongoose will attempt to reconnect
-			this.connection.on('disconnected', () => {
-				console.log('[DB] disconnected')
-			}) 
-	
-			// Errors - on failure on initial connection, but also on other errors on the connection (not on disconnect)
-			this.connection.on('error', () => {
-				console.error('[DB] error on connection - ', name)
-			})
-		}
-		
-
+	constructor(uri: string, options?: ConnectOptions) {
+		this.uri = uri
+		this.options = options
 	}
 
+	connect(uri: string, options?: ConnectOptions) {
+		if(!uri && !this.uri) throw new Error('No uri specified')
+		else {
+			this.connection = createConnection(uri, options)
+			// Database Events 
+			// Rejection - only if initial connection failed (Mongoose will NOT attempt to reconnect)
+			if(this.connection instanceof Promise) {
+				this.connection.catch(() => {
+					if(this.backOff > 10) this.backOff = 10
+					console.log(`[DB] Cannot connect, retrying in ${this.backOff} minutes`)
+					this.connection = null
+					setTimeout(this.connect.bind(this), this.backOff++ * 1000 * 60)
+				})
+			}
+	
+			if(this.connection instanceof Connection) {
+				const {name, host} = this.connection
+	
+				this.connection.on('open', () => {
+					console.log(`[DB] connection with ${name} on ${host}`)			
+					this.backOff = 1
+				})
+		
+				// Disconnection - Mongoose will attempt to reconnect
+				this.connection.on('disconnected', () => {
+					console.log('[DB] disconnected')
+				}) 
+		
+				// Errors - on failure on initial connection, but also on other errors on the connection (not on disconnect)
+				this.connection.on('error', () => {
+					console.error('[DB] error on connection - ', name)
+				})
+			}	
+		}
 
+	
 
+	}
 }
+
+const database = new Database(uri, options)
