@@ -38,6 +38,7 @@
   "imports": {
     "#server": "./build/server.js",
     "#mock/*": "./build/mock/*.js",
-    "#models/*": "./build/models/*.js"
+    "#models/*": "./build/models/*.js",
+    "#routes/*": "./build/routes/*.js"
   }
 }

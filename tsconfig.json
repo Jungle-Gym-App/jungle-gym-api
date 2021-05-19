@@ -15,7 +15,8 @@
     "paths": {
       "#server": ["server"],
       "#mock/*": ["mock/*"],
-      "#models/*": ["models/*"]
+      "#models/*": ["models/*"],
+      "#routes/*": ["routes/*"]
     } 
   }
 }
