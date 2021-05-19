@@ -1,7 +1,7 @@
 import {Router, Request, Response} from 'express'
-import { games } from '#mock/games'
+import { games as gameData } from '#mock/games'
 
 const games = Router()
 
 games
-	.get('/games', (req: Request, res: Response) => res.json(games))
+	.get('/games', (req: Request, res: Response) => res.json(gameData))
