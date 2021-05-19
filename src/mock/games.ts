@@ -136,7 +136,7 @@ export const games: Game[] = [
 		category: category.loop,
 		materials: [{
 			name: materialName.pion,
-			amount: 10
+			amount: 10,
 			notes: 'om de startlijn te maken'
 		}],
 		minimumPlayers: 5,
