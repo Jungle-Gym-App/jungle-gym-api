@@ -127,7 +127,30 @@ export const games: Game[] = [
 		],
 		minimumPlayers: 3,
 		targetGroup: [1, 2, 3],
-		rules: [ 'Het is geen wedstrijd', 'Ben je aan de overkant aangekomen dan draai je je weer om en ga je klaarstaan voor het volgende dier'],
+		rules: ['Het is geen wedstrijd', 'Ben je aan de overkant aangekomen dan draai je je weer om en ga je klaarstaan voor het volgende dier'],
 		variation: ['Als het goed gaat kan je aan de leerlingen vragen of zij nog dieren kennen']
+	},
+	{
+		name: 'Annemaria Koekoek',
+		description: 'De leerlingen maken een rij naast elkaar op de startlijn. De docent staat op minimaal 10 meter afstand tegenover de leerlingen, de docent is de zoeker.  De zoeker draait zich met de rug naar de leerlingen toe en roept ‘’Annemaria Koekoek’, nu mogen de leerlingen proberen naar voren te lopen. Als de zoeker klaar is met roepen, draait deze zich om. De leerlingen moeten stoppen met lopen zodra de zoeker zich heeft omgedraaid. Als een leerling beweegt en de zoeker ziet dit, dan mag de zoeker de leerling terugsturen naar de startlijn. Bijvoorbeeld: ‘’Ja, (naam) jij bent af, ik zag je bewegen’. De leerling die af was, start opnieuw bij de startlijn en mag weer meedoen zodra de zoeker begint met roepen. De leerling die als eerste bij de zoeker is, heeft gewonnen en wordt de nieuwe zoeker.',
+		category: category.loop,
+		materials: [{
+			name: materialName.pion,
+			amount: 10
+			notes: 'om de startlijn te maken'
+		}],
+		minimumPlayers: 5,
+		targetGroup: [1,2,3,4,5,6,7,8],
+		rules: ['De leerling mag altijd lopen, maar zodra de zoeker je ziet is de kans groot dat je terug moet naar de startlijn.', 'Als een leerling loopt en de zoeker ziet het, dan is een leerling af.'],
+		variation: [
+			{
+				description: 'Makkelijker zoekers/moeilijker lopers',
+				actions: ['Twee zoekers bij de muur', 'De zoekers roepen samen Annemaria Koekoek', 'Bij het zoeken mogen ze beide kijken welke leerlingen er lopen']
+			},
+			{
+				description: 'Moeilijker zoekers/makkelijker lopers',
+				actions: ['Mee aan de hand van een docent of een andere leerling']
+			}
+		]
 	}
 ]
