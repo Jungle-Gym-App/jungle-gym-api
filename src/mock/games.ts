@@ -2,6 +2,8 @@ import { Game, category, materialName } from '#models/game'
 
 export const games: Game[] = [
 	{
+		id: '1',
+		slug: 'kat-en-muis',
 		name: 'Kat en Muis',
 		description: 'Er wordt een kat gekozen, de rest is een muis. Ben je een muis, dan stop je een lintje in je broek, zodat het lijkt op een staart. Het doel van het spel is dat de katten de muizen vangen. Dit doen ze door een lintje uit de broek te trekken. Als dit is gelukt moet het lintje aan de juf of meester gegeven worden. Is jouw lintje afgepakt? Dan ga je aan de kant zitten. Het spel is afgelopen als alle lintjes gepakt zijn.',
 		category: category.tik,
@@ -24,6 +26,8 @@ export const games: Game[] = [
 		]
 	},
 	{
+		id: '2',
+		slug: 'pionnenroof',
 		name: 'Pionnenroof',
 		description: 'Er worden twee teams gemaakt. De spelers uit 1 team zijn de rovers, de spelers uit het andere team zijn de tikkers. Beide teams beginnen aan hun eigen kant van het veld. De tikkers hebben voor hen een rij met pionnen. Voor de rovers is het doel om zoveel mogelijk pionnen te roven. Zodra een rover een pion heeft gepakt mag deze getikt worden door een tikker. De rover moet proberen zonder getikt te worden de pion over de eigen achterlijn te krijgen. Ben je wel getikt? Dan moet de pion weer teruggelegd worden. Hoeveel pionnen kunnen de rovers pakken binnen 2 minuten?',
 		category: category.tik,
@@ -59,6 +63,8 @@ export const games: Game[] = [
 		]
 	},
 	{
+		id: '3',
+		slug: 'fopbal',
 		name: 'Fopbal',
 		description: 'Maak een grote kring met één iemand in het midden (de fopper), die heeft de bal. De leerlingen in de kring (de vangers) houden de handen achter de rug. De leerling in het midden mag steeds de bal echt of nep (fop) gooien. Gooit de leerling nep, maar komen jouw handen wel zichtbaar achter jouw rug vandaag? Dan ben je af en ga je zitten. Gooit de leerling de bal echt maar vang jij deze niet? Dan ben je ook af en ga je zitten. Vang je de bal wel of blijven je handen netjes achter je rug als de fopper jou fopt? Dan blijf je meedoen. De laatste die over blijft wint en wordt de nieuwe fopper nemen.',
 		category: category.bal,
@@ -85,6 +91,8 @@ export const games: Game[] = [
 		]
 	},
 	{
+		id: '4',
+		slug: 'moeder-hoe-laat-is-het',
 		name: 'Moeder hoe laat is het?',
 		description: 'De leerlingen maken een rij naast elkaar voor de pionnen, de docent gaat tegenover de leerlingen staan op minimaal 10 meter afstand. De docent is de ‘moeder’, de leerlingen zijn de kinderen. Op het teken van de docent zeggen de kinderen tegelijk ‘Moeder, moeder, hoe laat is het?’, dan kiest de docent een getal (1 t/m 12). Kiest de docent het getal 3 dan zegt hij/zij ‘Het is 3 uur’. Dan zetten de kinderen tegelijk 3 stappen vooruit. Daarna vragen ze opnieuw ‘Moeder, moeder, hoe laat is het?’, weer kiest de docent een getal en zegt bijvoorbeeld ‘Het is 8 uur’, de kinderen zetten nu tegelijk 8 stappen vooruit. Dit gaat zo door totdat het antwoord van de docent is ‘Het is bedtijd!’, dan moeten de kinderen zo snel mogelijk terugrennen naar de startlijn terwijl de docent probeert een van de kinderen te pakken. Is het de docent gelukt om een van de kinderen te pakken dan is dat kind de volgende ronde de ‘moeder’.',
 		category: category.loop,
@@ -115,6 +123,8 @@ export const games: Game[] = [
 		]
 	},
 	{
+		id: '5',
+		slug: 'dieren-parade',
 		name: 'Dieren parade',
 		description: 'Bij dit spel is het de bedoeling dat de leerlingen zoveel mogelijk dieren gaan uitbeelden. Maak met pionnen twee lijnen met een aantal meter ertussen (ongeveer 10 meter). De leerlingen maken een rij naast elkaar op een van de lijnen, iedereen moet voldoende ruimte hebben en alle leerlingen kijken dezelfde kant op. De docent noemt een dier en de leerlingen lopen naar de overkant als het genoemde dier. Het is geen snelheidswedstrijd! Het gaat erom wie het beste dat dier na kan doen.',
 		category: category.loop,
@@ -131,6 +141,8 @@ export const games: Game[] = [
 		variation: ['Als het goed gaat kan je aan de leerlingen vragen of zij nog dieren kennen']
 	},
 	{
+		id: '6',
+		slug: 'annemarie-koekoek',
 		name: 'Annemaria Koekoek',
 		description: 'De leerlingen maken een rij naast elkaar op de startlijn. De docent staat op minimaal 10 meter afstand tegenover de leerlingen, de docent is de zoeker.  De zoeker draait zich met de rug naar de leerlingen toe en roept ‘’Annemaria Koekoek’, nu mogen de leerlingen proberen naar voren te lopen. Als de zoeker klaar is met roepen, draait deze zich om. De leerlingen moeten stoppen met lopen zodra de zoeker zich heeft omgedraaid. Als een leerling beweegt en de zoeker ziet dit, dan mag de zoeker de leerling terugsturen naar de startlijn. Bijvoorbeeld: ‘’Ja, (naam) jij bent af, ik zag je bewegen’. De leerling die af was, start opnieuw bij de startlijn en mag weer meedoen zodra de zoeker begint met roepen. De leerling die als eerste bij de zoeker is, heeft gewonnen en wordt de nieuwe zoeker.',
 		category: category.loop,
