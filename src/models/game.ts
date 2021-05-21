@@ -1,14 +1,14 @@
 import mongoose from 'mongoose'
 const { Schema } = mongoose
 
-export enum category {
+export enum Category {
 	tik ='tikspel',
 	bal = 'balspel',
 	loop = 'loopspel',
 	reactie = 'reactiespel'
 }
 
-export enum materialName {
+export enum MaterialName {
 	lint = 'lintje',
 	fluit = 'fluitje',
 	hoepel = 'hoepel',
@@ -18,7 +18,7 @@ export enum materialName {
 }
 
 export interface material {
-	name: materialName
+	name: MaterialName
 	amount?: number | string
 	notes?: string
 }
@@ -33,12 +33,13 @@ export interface Game {
 	slug: string;
 	name: string
 	description: string
-	category: category
+	category: Category
 	materials: material[]
 	minimumPlayers: number
 	targetGroup: number[]
 	rules?: string[]
 	variation?: string[] | GameVariations[]
+	[key: string] : unknown
 }
 
 const gameSchema = new Schema<Game>({

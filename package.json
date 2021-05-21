@@ -33,7 +33,6 @@
     "typescript": "^4.2.4"
   },
   "dependencies": {
-    
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "mongoose": "^5.12.9"
@@ -41,6 +40,7 @@
   "imports": {
     "#server": "./build/server.js",
     "#mock/*": "./build/mock/*.js",
-    "#models/*": "./build/models/*.js"
+    "#models/*": "./build/models/*.js",
+    "#routes/*": "./build/routes/*.js"
   }
 }
