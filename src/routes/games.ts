@@ -5,8 +5,10 @@ import { RequestError } from 'Responses'
 
 const games: Router = Router()
 
+
 games
 	.get('/', getAllGames)
+	.get('/:slug', getSingleGame)
 
 export default games
 
@@ -21,6 +23,19 @@ function getAllGames(req: Request, res: Response, next: NextFunction) {
 		return res.status(error.status).json(error.body) 
 	}
 
+}
+
+function getSingleGame(req: Request, res: Response) {
+	const { slug } = req.params
+	const error: RequestError = {
+		status: 404,
+		body: `Cannot find game with slug ${slug}`
+	}
+
+	const game = gameData.find((game) => game.slug === slug)
+
+	if(game) return res.json(game)
+	else return res.status(error.status).json(error.body)
 }
 
 
