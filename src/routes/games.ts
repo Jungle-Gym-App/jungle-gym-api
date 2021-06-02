@@ -1,6 +1,6 @@
 import {Router, Request, Response, NextFunction} from 'express'
 import { games as gameData } from '#mock/games'
-import { filterCategory, filterMaterial } from '#modules/filters'
+import { filterCategory, filterGroup, filterMaterial, filterPlayerAmount } from '#modules/filters'
 import { apiError, ErrorTypes } from '#modules/errors'
 import { Category } from '#models/game'
 
@@ -13,16 +13,17 @@ export default games
 
 
 function getAllGames(req: Request, res: Response, next: NextFunction) {
-	const { category, material, targetGroup } = req.query
+	const { category, material, targetGroup, minimumPlayers } = req.query
 
 	try {
 		const filteredCategory = filterCategory(gameData, category)
 		const filteredMaterial = filterMaterial(filteredCategory, material)
+		const filteredGroup = filterGroup(filteredMaterial, targetGroup)
+		const filteredPlayers = filterPlayerAmount(filteredGroup, minimumPlayers)
 
 
-		return res.json(filteredMaterial)
+		return res.json(filteredPlayers)
 	} catch(error: apiError | unknown) {
-		console.log(error)
 		if(error instanceof apiError) {
 			switch(error.type){
 			case ErrorTypes.filter: 
