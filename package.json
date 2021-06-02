@@ -9,7 +9,8 @@
     "watch": "tsc --watch",
     "build": "tsc",
     "lint": "eslint ./src/",
-    "start": "node ./build/start.js"
+    "start": "node ./build/start.js",
+    "dev": "nodemon -r dotenv/config ./build/start.js"
   },
   "repository": {
     "type": "git",
@@ -41,6 +42,7 @@
     "#server": "./build/server.js",
     "#mock/*": "./build/mock/*.js",
     "#models/*": "./build/models/*.js",
+    "#modules/*": "./build/modules/*.js",
     "#routes/*": "./build/routes/*.js"
   }
 }
