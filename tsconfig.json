@@ -16,7 +16,8 @@
       "#server": ["server"],
       "#mock/*": ["mock/*"],
       "#models/*": ["models/*"],
-      "#routes/*": ["routes/*"]
+      "#routes/*": ["routes/*"],
+      "#modules/*": ["modules/*"]
     } 
   }
 }

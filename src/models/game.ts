@@ -17,7 +17,7 @@ export enum MaterialName {
 	bal = 'bal'
 }
 
-export interface material {
+export interface Material {
 	name: MaterialName
 	amount?: number | string
 	notes?: string
@@ -34,7 +34,7 @@ export interface Game {
 	name: string
 	description: string
 	category: Category
-	materials: material[]
+	materials: Material[]
 	minimumPlayers: number
 	targetGroup: number[]
 	rules?: string[]
