@@ -19,8 +19,8 @@ export enum MaterialName {
 
 export interface Material {
 	name: MaterialName | string
-	amount?: number | string
-	notes?: string
+	amount?: number | string | undefined
+	notes?: string | undefined
 }
 
 export interface GameVariations {
@@ -35,7 +35,7 @@ export interface Game {
 	description: string
 	category: Category | string
 	materials: Material[] | []
-	minimumPlayers: number
+	minimumPlayers: number | undefined
 	targetGroup: number[]
 	rules?: string[]
 	variation?: string[] | GameVariations[]
