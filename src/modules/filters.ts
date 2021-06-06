@@ -49,6 +49,6 @@ export function filterPlayerAmount(games: Game[], minimumPlayers: Game['minimumP
 	const players = Number(minimumPlayers)
 	
 	if(minimumPlayers && isNaN(players)) throw new apiError(`Got unknown minimum players: ${minimumPlayers}`, ErrorTypes.filter)
-	else if(players && !isNaN(players)) return games.filter((game) => game.minimumPlayers <= players)
+	else if(players && !isNaN(players)) return games.filter((game) => game.minimumPlayers ? game.minimumPlayers <= players : undefined)
 	else return games
 }
