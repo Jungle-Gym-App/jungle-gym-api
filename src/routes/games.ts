@@ -18,15 +18,10 @@ function getAllGames(req: Request, res: Response, next: NextFunction) {
 		const { category, material, targetGroup, minimumPlayers } = req.query
 	
 		try {
-			console.log(gameData)
 			const filteredCategory = filterCategory(gameData, category)
-			console.log(filteredCategory)
 			const filteredMaterial = filterMaterial(filteredCategory, material)
-			console.log(filteredMaterial)
 			const filteredGroup = filterGroup(filteredMaterial, targetGroup)
-			console.log(filteredGroup)
 			const filteredPlayers = filterPlayerAmount(filteredGroup, minimumPlayers)
-			console.log(filteredPlayers)
 
 			return res.json(filteredPlayers)
 		} catch(error: apiError | unknown) {
