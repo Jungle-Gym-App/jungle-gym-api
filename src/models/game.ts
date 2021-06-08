@@ -2,25 +2,25 @@ import mongoose from 'mongoose'
 const { Schema } = mongoose
 
 export enum Category {
-	tik ='tikspel',
-	bal = 'balspel',
-	loop = 'loopspel',
-	reactie = 'reactiespel'
+	tik ='Tikspel',
+	bal = 'Balspel',
+	loop = 'Loopspel',
+	reactie = 'Reactiespel'
 }
 
 export enum MaterialName {
-	lint = 'lintje',
-	fluit = 'fluitje',
-	hoepel = 'hoepel',
-	pion = 'pion',
-	klok = 'stopwatch',
-	bal = 'bal'
+	lint = 'Lintje',
+	fluit = 'Fluitje',
+	hoepel = 'Hoepel',
+	pion = 'Pion',
+	klok = 'Stopwatch',
+	bal = 'Bal'
 }
 
 export interface Material {
-	name: MaterialName
-	amount?: number | string
-	notes?: string
+	name: MaterialName | string
+	amount?: number | string | undefined
+	notes?: string | undefined
 }
 
 export interface GameVariations {
@@ -33,9 +33,9 @@ export interface Game {
 	slug: string;
 	name: string
 	description: string
-	category: Category
-	materials: Material[]
-	minimumPlayers: number
+	category: Category | string
+	materials: Material[] | []
+	minimumPlayers: number | undefined
 	targetGroup: number[]
 	rules?: string[]
 	variation?: string[] | GameVariations[]
