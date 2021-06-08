@@ -39,6 +39,7 @@ export interface Game {
 	targetGroup: number[]
 	rules?: string[]
 	variation?: string[] | GameVariations[]
+	updatedAt: string
 	[key: string] : unknown
 }
 
