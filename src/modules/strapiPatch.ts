@@ -5,7 +5,6 @@ export function strapiPatchAll(strapiGames: StrapiGame[]): Game[] {
 }
 
 export function strapiPatchSingle(strapiGame: StrapiGame): Game {
-	console.log(strapiGame)
 	const game: Game = {
 		id: typeof strapiGame.id === 'string' ? strapiGame.id : '',
 		slug: typeof strapiGame.slug === 'string' ? strapiGame.slug : '',

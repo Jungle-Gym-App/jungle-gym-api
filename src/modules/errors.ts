@@ -1,6 +1,9 @@
+import {Request, Response, ErrorRequestHandler, NextFunction} from 'express'
+
 export enum ErrorTypes {
 	general = 'INTERNAL_SERVER_ERROR',
-	filter = 'INVALID_FILTER'
+	filter = 'INVALID_FILTER',
+	login = 'INCORRECT_LOGIN'
 }
 
 
@@ -16,5 +19,23 @@ export class apiError extends Error {
 		super()
 		if(message) this.message = message
 		if(type) this.type = type
+	}
+}
+
+
+export function handleErrors(error: ErrorRequestHandler, req: Request, res: Response, next: NextFunction  ) : void {
+	if(error instanceof apiError) {
+		switch (error.type) {
+		case ErrorTypes.filter:
+			res.status(400).json(error)
+			break
+		case ErrorTypes.login:
+			res.set('WWW-Authenticate', 'Basic realm=').status(401).json(error)
+			break
+		default:
+			res.status(500).json(ErrorTypes.general)
+		}
+	} else {
+		res.status(500).json(ErrorTypes.general)
 	}
 }
