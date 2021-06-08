@@ -5,6 +5,7 @@ export function strapiPatchAll(strapiGames: StrapiGame[]): Game[] {
 }
 
 export function strapiPatchSingle(strapiGame: StrapiGame): Game {
+	console.log(strapiGame)
 	const game: Game = {
 		id: typeof strapiGame.id === 'string' ? strapiGame.id : '',
 		slug: typeof strapiGame.slug === 'string' ? strapiGame.slug : '',
@@ -16,7 +17,8 @@ export function strapiPatchSingle(strapiGame: StrapiGame): Game {
 		targetGroup: Array.isArray(strapiGame.targetGroup) ? strapiGame.targetGroup.map((a) => parseInt(a.group))
 			: [],
 		rules: Array.isArray(strapiGame.rules) ? strapiGame.rules.map((a) => a.description) : [],
-		variation: gameVariation(strapiGame.variation)
+		variation: gameVariation(strapiGame.variation),
+		updatedAt: strapiGame.updatedAt
 	}
 	return game
 }
@@ -72,6 +74,7 @@ export interface StrapiGame {
 	targetGroup: {group: string}[]
 	rules?: {description: string}[]
 	variation?: { description: string, actions: [{description: string}]}
+	updatedAt: string
 	[key: string] : unknown
 }
 
