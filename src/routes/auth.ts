@@ -1,14 +1,14 @@
 import {Router, Request, Response, NextFunction } from 'express'
 import { user } from '#mock/user'
 import { apiError, ErrorTypes } from '#modules/errors'
-=import { startNewSession } from '#modules/session/session'
+=import { revokeSession, startNewSession } from '#modules/session/session'
 
 const auth: Router = Router()
 
 
 auth
 	.post('/token', handleTokenRequest)
-	// .post('/revoke', handleTokenRevocation)
+	.post('/revoke', handleTokenRevocation)
 
 export default auth 
 
@@ -27,30 +27,16 @@ async function handleTokenRequest(req: Request, res: Response, next: NextFunctio
 	}
 }
 
-// async function handleTokenRevocation(req: Request, res: Response, next: NextFunction) {
-	
-// 	const accessToken = req.get('Authorization')?.split(' ')[1]
+async function handleTokenRevocation(req: Request, res: Response, next: NextFunction) {
+	const accessToken = req.get('Authorization')?.split(' ')[1]
 
-// 	console.log(accessToken)
+	if(!accessToken)return next(new apiError('No access token', ErrorTypes.token))
 
-// 	if(!sessionDB) return next(new apiError('SessionDB offline', ErrorTypes.general)) 
-// 	// the server should try to hold de revocation an try on its on later.
-
-// 	if(!accessToken)return next(new apiError('No access token', ErrorTypes.token))
-
-// 	try {
-// 		const session = await sessionDB.hgetall(accessToken)
-// 		session.status = SessionStatus.revoked
-
-// 		await sessionDB.hset(accessToken, 'status', SessionStatus.revoked)
-// 		await sessionDB.expire(accessToken, 600)
-
-// 		return res.json(session)
-
-
-// 	} catch(error) {
-// 		return next(new apiError('SessionDB error', ErrorTypes.general))
-// 	}
-
-// }
+	try {
+		await revokeSession(accessToken)
+		return res.status(200).json({})
+	} catch(error) {
+		return next(error)
+	}
+}
 

@@ -4,7 +4,8 @@ export enum ErrorTypes {
 	general = 'INTERNAL_SERVER_ERROR',
 	filter = 'INVALID_FILTER',
 	login = 'INCORRECT_LOGIN',
-	token = 'INVALID_ACCESS_TOKEN'
+	token = 'INVALID_ACCESS_TOKEN',
+	session = 'INVALID_SESSION'
 }
 
 

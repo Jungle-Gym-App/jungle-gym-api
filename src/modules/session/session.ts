@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid'
-import { saveSession } from '#modules/session/sessionDB'
+import { deleteSession, getSession, saveSession } from '#modules/session/sessionDB'
 import { ErrorTypes, apiError } from '#modules/errors'
 
 export enum SessionStatus {
@@ -11,6 +11,7 @@ export interface Session {
 	[propname: string]: string| number,
 	'status': SessionStatus,
 	'access_token': string,
+	'valid_from': string,
 	'expires_in': number ,
 	'expires_on': string
 }
@@ -24,40 +25,32 @@ export interface Session {
  */
 export async function startNewSession() : Promise<Session> {
 	const session: Session = createSession()
-
-	try {
 		await saveSession(session)
 		return session
-
-	} catch(error) {
-		// [LOG]
-		console.log(error)
-		throw error instanceof apiError ? error : new apiError('SessionDB error', ErrorTypes.general)
 	}
+
+/**
+ * Revokes a session
+ * @param accessToken the access token of the session to revoke
+ * @returns 
+ */
+export async function revokeSession(accessToken: Session['access_token']) : Promise<void> {
+	const session = await getSession(accessToken)
+	if(session.status === 'active') return deleteSession(accessToken)
+	else return
 }
 
-// function checkSession() {
-
-// }
-
-// function refreshSession() {
-
-// }
-
-// function revokeSession() {
-
-// }
-
-
-export function createSession() : Session{
+function createSession() : Session{
 	const accessToken = uuidv4()
 	const currentDateTime = Date.now()
+	const validFrom = new Date(currentDateTime)
 	const expiresIn = 1800000
 	const expireDate = new Date(currentDateTime + expiresIn)
 
 	const session: Session = {
 		'status': SessionStatus.active,
 		'access_token': accessToken,
+		'valid_from': validFrom.toLocaleString(undefined, {timeZone: 'Europe/Amsterdam'}),
 		'expires_in': expiresIn ,
 		'expires_on': expireDate.toLocaleString(undefined, {timeZone: 'Europe/Amsterdam'})
 	}
