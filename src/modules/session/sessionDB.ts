@@ -73,6 +73,8 @@ function connectToDatabase() {
 	if(process.env.REDIS_TLS_URL) options = parseReddisURL(process.env.REDIS_TLS_URL, true)
 
 	console.log(options)
+
+	// @ts-ignore: tls needs on
 	sessionDB = new Tedis(options)
 
 
