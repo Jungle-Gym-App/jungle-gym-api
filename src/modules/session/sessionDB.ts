@@ -72,13 +72,17 @@ function connectToDatabase() {
 	
 		sessionDB = new Tedis(options)
 
+		console.log(options)
+
 		let dbError: Error
 	
 		sessionDB.on('connect', () => console.log('SessionDB connected'))
-		sessionDB.on('error', (error) => dbError = error)
+		sessionDB.on('error', (error) => {
+			console.log(error)
+			dbError = error
+		})
 		sessionDB.on('close', (had_error) => {
 			console.log('SessionDB closed', dbError && had_error ? dbError : 'Normal Closure')
-
 			sessionDB = undefined
 			setTimeout(connectToDatabase, 300000)
 		})
