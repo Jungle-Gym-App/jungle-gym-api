@@ -70,7 +70,7 @@ function connectToDatabase() {
 	if (Boolean(username) && typeof username === 'string') options.username = username
 	if (tls) options.tls = { key: Buffer.from(''), cert: Buffer.from('')}
 
-	if(process.env.REDIS_TLS_URL) options = parseReddisURL(process.env.REDIS_TLS_URL)
+	if(process.env.REDIS_TLS_URL) options = parseReddisURL(process.env.REDIS_TLS_URL, true)
 
 	console.log(options)
 	sessionDB = new Tedis(options)
