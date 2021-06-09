@@ -25,9 +25,9 @@ export interface Session {
  */
 export async function startNewSession() : Promise<Session> {
 	const session: Session = createSession()
-		await saveSession(session)
-		return session
-	}
+	await saveSession(session)
+	return session
+}
 
 /**
  * Revokes a session
@@ -57,3 +57,9 @@ function createSession() : Session{
 
 	return session
 }
+
+// function isExpired(expiresOn: Session['expires_on']): boolean {
+// 	const expiresOnDate = new Date(expiresOn)
+// 	const nowDate = new Date(Date.now())
+// 	return nowDate > expiresOnDate
+// }

@@ -2,7 +2,7 @@ import { Tedis } from 'tedis'
 import { Session, SessionStatus } from '#modules/session/session'
 import { apiError, ErrorTypes } from '#modules/errors'
 
-const host: string | undefined = process.env.SESSION_DB_URL
+const host: string | undefined = process.env.REDIS_TLS_URL || process.env.REDIS_TLS_URL || process.env.SESSION_DB_URL
 const port: number | undefined = Number(process.env.SESSION_DB_PORT)
 const password: string | undefined = process.env.SESSION_DB_PASSWORD
 const username: string | undefined = process.env.SESSION_DB_USERNAME
