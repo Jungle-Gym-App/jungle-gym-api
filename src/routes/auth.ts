@@ -1,7 +1,7 @@
 import {Router, Request, Response, NextFunction } from 'express'
 import { user } from '#mock/user'
 import { apiError, ErrorTypes } from '#modules/errors'
-=import { revokeSession, startNewSession } from '#modules/session/session'
+import { revokeSession, startNewSession } from '#modules/session/session'
 
 const auth: Router = Router()
 
