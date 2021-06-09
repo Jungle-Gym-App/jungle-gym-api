@@ -70,7 +70,7 @@ function connectToDatabase() {
 	if (Boolean(username) && typeof username === 'string') options.username = username
 	if (tls) options.tls = { key: Buffer.from(''), cert: Buffer.from('')}
 
-	if(process.env.REDIS_URL) options = parseReddisURL(process.env.REDIS_URL)
+	if(process.env.REDIS_TLS_URL) options = parseReddisURL(process.env.REDIS_TLS_URL)
 
 	console.log(options)
 	sessionDB = new Tedis(options)
@@ -120,21 +120,24 @@ function transformRawSession(rawSession: { [propName: string] :  string| number}
 }
 
 
-function parseReddisURL(connectionString: string) {
+function parseReddisURL(connectionString: string, tls = false) {
 	const [protocolPassword, hostPort] = connectionString.split('@')
 	const [host, port] = hostPort.split(':')
-	const [ empty, protocol, password ] = protocolPassword.split(/^(redis)s?:\/\/:/)
+	const [ empty, protocol, usernamePassword ] = protocolPassword.split(/^(redis)s?:\/\//)
+	const [ username, password ] = usernamePassword.split(':')
 	
 	const options: {
 		host: string;
 		port: number;
-		password: string;
+		password?: string;
 		username?: string;
 		tls?: {key: Buffer, cert: Buffer};
 	} = { 
 		host,
 		port: Number(port),
-		password 
+		password: password?.length > 0 ? password : undefined,
+		username: username?.length > 0 ? username : undefined,
+		tls: tls ? {key: Buffer.from(''), cert: Buffer.from('')} : undefined
 	}
 
 	return options
