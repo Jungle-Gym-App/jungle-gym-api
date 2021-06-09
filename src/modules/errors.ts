@@ -37,9 +37,9 @@ export function handleErrors(error: ErrorRequestHandler, req: Request, res: Resp
 			res.status(401).json(error)
 			break
 		default:
-			res.status(500).json(ErrorTypes.general)
+			res.status(500).json(error)
 		}
 	} else {
-		res.status(500).json(ErrorTypes.general)
+		res.status(500).json(new apiError('Internal server error', ErrorTypes.general))
 	}
 }
