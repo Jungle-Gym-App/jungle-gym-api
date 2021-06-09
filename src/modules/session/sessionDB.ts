@@ -123,7 +123,7 @@ function transformRawSession(rawSession: { [propName: string] :  string| number}
 function parseReddisURL(connectionString: string) {
 	const [protocolPassword, hostPort] = connectionString.split('@')
 	const [host, port] = hostPort.split(':')
-	const [ empty, protocol, password ] = protocolPassword.split(/^(redis)s?:\/\//)
+	const [ empty, protocol, password ] = protocolPassword.split(/^(redis)s?:\/\/:/)
 	
 	const options: {
 		host: string;
