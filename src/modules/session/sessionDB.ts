@@ -63,7 +63,7 @@ function connectToDatabase() {
 		port?: number;
 		password?: string;
 		username?: string;
-		tls?: {key: Buffer, cert: Buffer};
+		tls?: {key?: Buffer, cert?: Buffer};
 	} = { host, port }
 
 	if (Boolean(password) && typeof password === 'string') options.password = password
@@ -131,13 +131,13 @@ function parseReddisURL(connectionString: string, tls = false) {
 		port: number;
 		password?: string;
 		username?: string;
-		tls?: {key: Buffer, cert: Buffer};
+		tls?: {key?: Buffer, cert?: Buffer};
 	} = { 
 		host,
 		port: Number(port),
 		password: password?.length > 0 ? password : undefined,
 		username: username?.length > 0 ? username : undefined,
-		tls: tls ? {key: Buffer.from(''), cert: Buffer.from('')} : undefined
+		tls: tls ? {} : undefined
 	}
 
 	return options
