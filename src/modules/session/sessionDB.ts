@@ -2,7 +2,7 @@ import { Tedis } from 'tedis'
 import { Session, SessionStatus } from '#modules/session/session'
 import { apiError, ErrorTypes } from '#modules/errors'
 
-const host: string | undefined = process.env.REDIS_TLS_URL || process.env.REDIS_TLS_URL || process.env.SESSION_DB_URL
+const host: string | undefined = process.env.SESSION_DB_URL
 const port: number | undefined = Number(process.env.SESSION_DB_PORT)
 const password: string | undefined = process.env.SESSION_DB_PASSWORD
 const username: string | undefined = process.env.SESSION_DB_USERNAME
@@ -58,21 +58,23 @@ export function deleteSession(accessToken: Session['access_token'], expired = fa
 function connectToDatabase() {
 	console.info('Connecting to DB')
 	if (typeof port === 'number' && !isNaN(port) && typeof host === 'string') {
-		const options: {
+		let options: {
 			host: string;
-			port: number;
+			port?: number;
 			password?: string;
 			username?: string;
 			tls?: {key: Buffer, cert: Buffer};
 		} = { host, port }
 	
+		
 		if (Boolean(password) && typeof password === 'string') options.password = password
 		if (Boolean(username) && typeof username === 'string') options.username = username
 		if (tls) options.tls = { key: Buffer.from(''), cert: Buffer.from('')}
-	
+		if (process.env.REDIS_URL) options = {host: process.env.REDIS_URL}
+		
+		console.log(options)
 		sessionDB = new Tedis(options)
 
-		console.log(options)
 
 		let dbError: Error
 	
