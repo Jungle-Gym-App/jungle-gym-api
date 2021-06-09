@@ -57,38 +57,36 @@ export function deleteSession(accessToken: Session['access_token'], expired = fa
 
 function connectToDatabase() {
 	console.info('Connecting to DB')
-	if (typeof port === 'number' && !isNaN(port) && typeof host === 'string') {
-		let options: {
-			host: string;
-			port?: number;
-			password?: string;
-			username?: string;
-			tls?: {key: Buffer, cert: Buffer};
-		} = { host, port }
+	let options: {
+		host?: string;
+		port?: number;
+		password?: string;
+		username?: string;
+		tls?: {key: Buffer, cert: Buffer};
+	} = { host, port }
+
 	
-		
-		if (Boolean(password) && typeof password === 'string') options.password = password
-		if (Boolean(username) && typeof username === 'string') options.username = username
-		if (tls) options.tls = { key: Buffer.from(''), cert: Buffer.from('')}
-		if (process.env.REDIS_URL) options = {host: process.env.REDIS_URL}
-		
-		console.log(options)
-		sessionDB = new Tedis(options)
+	if (Boolean(password) && typeof password === 'string') options.password = password
+	if (Boolean(username) && typeof username === 'string') options.username = username
+	if (tls) options.tls = { key: Buffer.from(''), cert: Buffer.from('')}
+	if (process.env.REDIS_URL) options = {host: process.env.REDIS_URL}
+	
+	console.log(options)
+	sessionDB = new Tedis(options)
 
 
-		let dbError: Error
-	
-		sessionDB.on('connect', () => console.log('SessionDB connected'))
-		sessionDB.on('error', (error) => {
-			console.log(error)
-			dbError = error
-		})
-		sessionDB.on('close', (had_error) => {
-			console.log('SessionDB closed', dbError && had_error ? dbError : 'Normal Closure')
-			sessionDB = undefined
-			setTimeout(connectToDatabase, 300000)
-		})
-	}
+	let dbError: Error
+
+	sessionDB.on('connect', () => console.log('SessionDB connected'))
+	sessionDB.on('error', (error) => {
+		console.log(error)
+		dbError = error
+	})
+	sessionDB.on('close', (had_error) => {
+		console.log('SessionDB closed', dbError && had_error ? dbError : 'Normal Closure')
+		sessionDB = undefined
+		setTimeout(connectToDatabase, 300000)
+	})
 }
 
 
