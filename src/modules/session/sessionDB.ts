@@ -2,11 +2,15 @@ import { Tedis } from 'tedis'
 import { Session, SessionStatus } from '#modules/session/session'
 import { apiError, ErrorTypes } from '#modules/errors'
 
-const host: string | undefined = process.env.SESSION_DB_URL
-const port: number | undefined = Number(process.env.SESSION_DB_PORT)
+const host: string = process.env.SESSION_DB_URL ? process.env.SESSION_DB_URL : ''
+const port: number | undefined = process.env.SESSION_DB_PORT ? Number(process.env.SESSION_DB_PORT) : undefined
 const password: string | undefined = process.env.SESSION_DB_PASSWORD
 const username: string | undefined = process.env.SESSION_DB_USERNAME
-const tls: string | boolean = Boolean(process.env.SESSION_DB_TLS)
+const tls: boolean = (process.env.SESSION_DB_TLS === 'true')
+const dbNumber: number = Number(process.env.SESSION_DB_NUMBER)
+
+
+console.log()
 
 let sessionDB: Tedis | undefined
 
@@ -64,18 +68,16 @@ function connectToDatabase() {
 		password?: string;
 		username?: string;
 		tls?: {key?: Buffer, cert?: Buffer};
-	} = { host, port }
+	} = { host: `${host}`, port }
 
 	if (Boolean(password) && typeof password === 'string') options.password = password
 	if (Boolean(username) && typeof username === 'string') options.username = username
-	if (tls) options.tls = { key: Buffer.from(''), cert: Buffer.from('')}
+	if (tls) options.tls = {}
 
-	if(process.env.REDIS_TLS_URL) options = parseReddisURL(process.env.REDIS_TLS_URL, true)
-
-	console.log(options)
-
-	// @ts-ignore: tls needs on
+	// @ts-ignore
 	sessionDB = new Tedis(options)
+
+	sessionDB.command('SELECT', !isNaN(dbNumber) ? dbNumber : 0)
 
 
 	let dbError: Error
@@ -122,26 +124,26 @@ function transformRawSession(rawSession: { [propName: string] :  string| number}
 }
 
 
-function parseReddisURL(connectionString: string, tls = false) {
-	const [protocolPassword, hostPort] = connectionString.split('@')
-	const [host, port] = hostPort.split(':')
-	const [ empty, protocol, usernamePassword ] = protocolPassword.split(/^(redis)s?:\/\//)
-	const [ username, password ] = usernamePassword.split(':')
+// function parseReddisURL(connectionString: string, tls = false) {
+// 	const [protocolPassword, hostPort] = connectionString.split('@')
+// 	const [host, port] = hostPort.split(':')
+// 	const [ empty, protocol, usernamePassword ] = protocolPassword.split(/^(redis)s?:\/\//)
+// 	const [ username, password ] = usernamePassword.split(':')
 	
-	const options: {
-		host: string;
-		port: number;
-		password?: string;
-		username?: string;
-		tls?: {key?: Buffer, cert?: Buffer};
-	} = { 
-		host,
-		port: Number(port),
-		password: password?.length > 0 ? password : undefined,
-		username: username?.length > 0 ? username : undefined,
-		tls: tls ? {} : undefined
-	}
+// 	const options: {
+// 		host: string;
+// 		port: number;
+// 		password?: string;
+// 		username?: string;
+// 		tls?: {key?: Buffer, cert?: Buffer};
+// 	} = { 
+// 		host,
+// 		port: Number(port),
+// 		password: password?.length > 0 ? password : undefined,
+// 		username: username?.length > 0 ? username : undefined,
+// 		tls: tls ? {} : undefined
+// 	}
 
-	return options
+// 	return options
 
-}
+// }
