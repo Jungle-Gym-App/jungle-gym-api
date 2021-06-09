@@ -3,7 +3,8 @@ import {Request, Response, ErrorRequestHandler, NextFunction} from 'express'
 export enum ErrorTypes {
 	general = 'INTERNAL_SERVER_ERROR',
 	filter = 'INVALID_FILTER',
-	login = 'INCORRECT_LOGIN'
+	login = 'INCORRECT_LOGIN',
+	token = 'INVALID_ACCESS_TOKEN'
 }
 
 
@@ -30,7 +31,10 @@ export function handleErrors(error: ErrorRequestHandler, req: Request, res: Resp
 			res.status(400).json(error)
 			break
 		case ErrorTypes.login:
-			res.set('WWW-Authenticate', 'Basic realm=').status(401).json(error)
+			res.set('WWW-Authenticate', 'Basic realm=Retrieving Access Token for API').status(401).json(error)
+			break
+		case ErrorTypes.token: 
+			res.status(401).json(error)
 			break
 		default:
 			res.status(500).json(ErrorTypes.general)

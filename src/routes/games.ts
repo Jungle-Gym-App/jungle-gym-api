@@ -1,7 +1,6 @@
 import {Router, Request, Response, NextFunction} from 'express'
 import { getAllGames as getAllGamesStrapi, getSingleGame as getSingleGameStrapi } from '#modules/strapi'
 import { filterCategory, filterGroup, filterMaterial, filterPlayerAmount } from '#modules/filters'
-import { apiError, ErrorTypes } from '#modules/errors'
 import { RequestError } from 'Responses'
 
 const games: Router = Router()
