@@ -57,6 +57,7 @@ export function deleteSession(accessToken: Session['access_token'], expired = fa
 
 function connectToDatabase() {
 	console.info('Connecting to DB')
+
 	let options: {
 		host?: string;
 		port?: number;
@@ -65,12 +66,12 @@ function connectToDatabase() {
 		tls?: {key: Buffer, cert: Buffer};
 	} = { host, port }
 
-	
 	if (Boolean(password) && typeof password === 'string') options.password = password
 	if (Boolean(username) && typeof username === 'string') options.username = username
 	if (tls) options.tls = { key: Buffer.from(''), cert: Buffer.from('')}
-	if (process.env.REDIS_URL) options = {host: process.env.REDIS_URL}
-	
+
+	if(process.env.REDIS_URL) options = parseReddisURL(process.env.REDIS_URL)
+
 	console.log(options)
 	sessionDB = new Tedis(options)
 
@@ -115,5 +116,27 @@ function transformRawSession(rawSession: { [propName: string] :  string| number}
 		expires_in: typeof rawSession.expires_in === 'number' ? rawSession.expires_in : Number(rawSession.expires_in),
 		expires_on: typeof rawSession.expires_on === 'string' ? rawSession.expires_on : String(rawSession.expires_on)
 	}
+
+}
+
+
+function parseReddisURL(connectionString: string) {
+	const [protocolPassword, hostPort] = connectionString.split('@')
+	const [host, port] = hostPort.split(':')
+	const [ empty, protocol, password ] = protocolPassword.split(/^(redis)s?:\/\//)
+	
+	const options: {
+		host: string;
+		port: number;
+		password: string;
+		username?: string;
+		tls?: {key: Buffer, cert: Buffer};
+	} = { 
+		host,
+		port: Number(port),
+		password 
+	}
+
+	return options
 
 }
