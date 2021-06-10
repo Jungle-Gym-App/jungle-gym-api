@@ -9,9 +9,6 @@ const username: string | undefined = process.env.SESSION_DB_USERNAME
 const tls: boolean = (process.env.SESSION_DB_TLS === 'true')
 const dbNumber = Number(process.env.SESSION_DB_NUMBER)
 
-
-console.log()
-
 let sessionDB: Tedis | undefined
 
 connectToDatabase()
@@ -60,7 +57,7 @@ export function deleteSession(accessToken: Session['access_token'], expired = fa
 
 
 function connectToDatabase() {
-	console.info('Connecting to DB')
+	console.info('[SessionDB] Connecting')
 
 	const options: {
 		host?: string;
@@ -84,13 +81,13 @@ function connectToDatabase() {
 
 	let dbError: Error
 
-	sessionDB.on('connect', () => console.log('SessionDB connected'))
+	sessionDB.on('connect', () => console.log('[SessionDB] connected'))
 	sessionDB.on('error', (error) => {
-		console.log(error)
+		console.log('[SessionDB]', error)
 		dbError = error
 	})
 	sessionDB.on('close', (had_error) => {
-		console.log('SessionDB closed', dbError && had_error ? dbError : 'Normal Closure')
+		console.log('[SessionDB] closed', dbError && had_error ? dbError : 'Normal Closure')
 		sessionDB = undefined
 		setTimeout(connectToDatabase, 300000)
 	})
