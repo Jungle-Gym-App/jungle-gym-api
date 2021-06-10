@@ -1,6 +1,5 @@
 import UserSchema, { User } from '#models/user'
-import { apiError, ErrorTypes } from '#modules/errors'
-import mongoose, { ConnectOptions, Model, MongooseDocument } from 'mongoose'
+import mongoose, { ConnectOptions, Model } from 'mongoose'
 
 const { createConnection } =  mongoose
 
@@ -53,13 +52,11 @@ class Database {
 
 	
 			if(this.connection instanceof mongoose.Connection) {
-				
-
 				const userModel = this.connection.model<User>('User', UserSchema)
-				this.models.set('Users', userModel)
+				this.models.set('users', userModel)
 	
 				this.connection.on('open', () => {
-					console.log('[DB] connection open')			
+					console.log('[DB] connection open', this.connection?.name, this.connection?.host)			
 					this.backOff = 1
 				})
 		
@@ -70,7 +67,7 @@ class Database {
 		
 				// Errors - on failure on initial connection, but also on other errors on the connection (not on disconnect)
 				this.connection.on('error', () => {
-					console.error('[DB] error on connection - ', name)
+					console.error('[DB] error on connection')
 				})
 			}	
 		}
@@ -89,18 +86,16 @@ export const databaseStatus = () : boolean => database.ready
 
 
 export async function findUserByUsername(username: User['username']) : Promise<(User & mongoose.Document ) | null> {
-	const UserModel: Model<User> | undefined = database.models.get('Users')
+	const UserModel: Model<User> | undefined = database.models.get('users')
 
 	if(UserModel) {
 		const currentUser = await UserModel.findOne({username}).exec()
-
-		console.log('found', currentUser)
 		return currentUser
 	} else return null
 }
 
 export async function findUserById(id: string) : Promise<(User & mongoose.Document ) | null> {
-	const UserModel: Model<User> | undefined = database.models.get('Users')
+	const UserModel: Model<User> | undefined = database.models.get('users')
 
 	if(UserModel) {
 		const currentUser = await UserModel.findById(id).exec()

@@ -1,5 +1,4 @@
 import {Router, Request, Response, NextFunction } from 'express'
-import { user } from '#mock/user'
 import { apiError, ErrorTypes } from '#modules/errors'
 import { revokeSession, startNewSession } from '#modules/session/session'
 import { findUserByUsername } from '#modules/database/database'
@@ -20,8 +19,6 @@ async function handleTokenRequest(req: Request, res: Response, next: NextFunctio
 	if(!username || !password ) return next(new apiError('No username or password supplied', ErrorTypes.login))
 
 	const user = await findUserByUsername(username)
-
-	console.log(username, password, user)
 
 	if(!user) return next(new apiError('No user found', ErrorTypes.login))
 	
