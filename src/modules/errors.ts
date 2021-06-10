@@ -5,7 +5,8 @@ export enum ErrorTypes {
 	filter = 'INVALID_FILTER',
 	login = 'INCORRECT_LOGIN',
 	token = 'INVALID_ACCESS_TOKEN',
-	session = 'INVALID_SESSION'
+	session = 'INVALID_SESSION',
+	database = 'DATABASE_ERROR'
 }
 
 
@@ -37,10 +38,17 @@ export function handleErrors(error: ErrorRequestHandler, req: Request, res: Resp
 		case ErrorTypes.token: 
 			res.status(401).json(error)
 			break
+		case ErrorTypes.session: 
+			res.status(401).json(error)
+			break
+		case ErrorTypes.database: 
+			res.status(500).json(error)
+			break
 		default:
 			res.status(500).json(error)
 		}
 	} else {
+		console.log(error)
 		res.status(500).json(new apiError('Internal server error', ErrorTypes.general))
 	}
 }

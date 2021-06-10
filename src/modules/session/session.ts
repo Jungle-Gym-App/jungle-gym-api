@@ -9,6 +9,7 @@ export enum SessionStatus {
 }
 export interface Session {
 	[propname: string]: string| number,
+	id: string
 	'status': SessionStatus,
 	'access_token': string,
 	'valid_from': string,
@@ -17,14 +18,12 @@ export interface Session {
 }
 
 
-
-
 /**
  * Start a new session 
  * @returns a newly started session
  */
-export async function startNewSession() : Promise<Session> {
-	const session: Session = createSession()
+export async function startNewSession(id: string) : Promise<Session> {
+	const session: Session = createSession(id)
 	await saveSession(session)
 	return session
 }
@@ -40,7 +39,26 @@ export async function revokeSession(accessToken: Session['access_token']) : Prom
 	else return
 }
 
-function createSession() : Session{
+export async function retrieveSession(accessToken: Session['access_token']) : Promise<Session> {
+	return getSession(accessToken)
+}
+
+/**
+ * Checks if the session is active
+ * @param accessToken  the access token of the session to check
+ * @returns resolves when session is active, rejects if not active anymore
+ */
+export async function checkSession(accessToken: Session['access_token']) : Promise<void>{
+	const session = await getSession(accessToken)
+
+	if(session.status !== SessionStatus.active) throw new apiError(`Session is ${session.status}`, ErrorTypes.session)
+	else if(isExpired(session.expires_on)) {
+		await deleteSession(accessToken, true)
+		throw new apiError('Session is expired', ErrorTypes.session)
+	}
+}
+
+function createSession(id: string) : Session{
 	const accessToken = uuidv4()
 	const currentDateTime = Date.now()
 	const validFrom = new Date(currentDateTime)
@@ -48,18 +66,19 @@ function createSession() : Session{
 	const expireDate = new Date(currentDateTime + expiresIn)
 
 	const session: Session = {
+		id,
 		'status': SessionStatus.active,
 		'access_token': accessToken,
-		'valid_from': validFrom.toLocaleString(undefined, {timeZone: 'Europe/Amsterdam'}),
-		'expires_in': expiresIn ,
-		'expires_on': expireDate.toLocaleString(undefined, {timeZone: 'Europe/Amsterdam'})
+		'valid_from': validFrom.toISOString(),
+		'expires_in': expiresIn,
+		'expires_on': expireDate.toISOString()
 	}
 
 	return session
 }
 
-// function isExpired(expiresOn: Session['expires_on']): boolean {
-// 	const expiresOnDate = new Date(expiresOn)
-// 	const nowDate = new Date(Date.now())
-// 	return nowDate > expiresOnDate
-// }
+function isExpired(expiresOn: Session['expires_on']): boolean {
+	const expiresOnDate = new Date(expiresOn)
+	const nowDate = new Date(Date.now())
+	return nowDate > expiresOnDate
+}

@@ -1,4 +1,8 @@
-import { Connection, ConnectOptions, createConnection} from 'mongoose'
+import UserSchema, { User } from '#models/user'
+import { apiError, ErrorTypes } from '#modules/errors'
+import mongoose, { ConnectOptions, Model, MongooseDocument } from 'mongoose'
+
+const { createConnection } =  mongoose
 
 const address = process.env.DB_ADDRESS
 const port = process.env.DB_PORT
@@ -17,20 +21,25 @@ const options: ConnectOptions = {
 }
 
 class Database {
-	private connection: Connection | Promise<Connection> | null = null
+	private connection: mongoose.Connection | null = null
 	private backOff = 0
 	uri: string;
 	options?: ConnectOptions
+	models: Map<string, Model<User>> = new Map()
 
 	constructor(uri: string, options?: ConnectOptions) {
 		this.uri = uri
 		this.options = options
 	}
 
-	connect(uri: string, options?: ConnectOptions) {
+	get ready() : boolean {
+		return this.connection?.readyState === 1 
+	}
+
+	connect() {
 		if(!uri && !this.uri) throw new Error('No uri specified')
 		else {
-			this.connection = createConnection(uri, options)
+			this.connection = createConnection(this.uri, this.options)
 			// Database Events 
 			// Rejection - only if initial connection failed (Mongoose will NOT attempt to reconnect)
 			if(this.connection instanceof Promise) {
@@ -41,9 +50,13 @@ class Database {
 					setTimeout(this.connect.bind(this), this.backOff++ * 1000 * 60)
 				})
 			}
+
 	
-			if(this.connection instanceof Connection) {
+			if(this.connection instanceof mongoose.Connection) {
 				const {name, host} = this.connection
+
+				const userModel = this.connection.model<User>('User', UserSchema)
+				this.models.set('Users', userModel)
 	
 				this.connection.on('open', () => {
 					console.log(`[DB] connection with ${name} on ${host}`)			
@@ -68,3 +81,27 @@ class Database {
 }
 
 const database = new Database(uri, options)
+
+database.connect()
+
+
+export const databaseStatus = () : boolean => database.ready
+
+
+export async function findUserByUsername(username: User['username']) : Promise<(User & mongoose.Document ) | null> {
+	const UserModel: Model<User> | undefined = database.models.get('Users')
+
+	if(UserModel) {
+		const currentUser = await UserModel.findOne({username}).exec()
+		return currentUser
+	} else return null
+}
+
+export async function findUserById(id: string) : Promise<(User & mongoose.Document ) | null> {
+	const UserModel: Model<User> | undefined = database.models.get('Users')
+
+	if(UserModel) {
+		const currentUser = await UserModel.findById(id).exec()
+		return currentUser
+	} else return null
+}

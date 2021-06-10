@@ -7,10 +7,7 @@ const port: number | undefined = process.env.SESSION_DB_PORT ? Number(process.en
 const password: string | undefined = process.env.SESSION_DB_PASSWORD
 const username: string | undefined = process.env.SESSION_DB_USERNAME
 const tls: boolean = (process.env.SESSION_DB_TLS === 'true')
-const dbNumber: number = Number(process.env.SESSION_DB_NUMBER)
-
-
-console.log()
+const dbNumber = Number(process.env.SESSION_DB_NUMBER)
 
 let sessionDB: Tedis | undefined
 
@@ -60,9 +57,9 @@ export function deleteSession(accessToken: Session['access_token'], expired = fa
 
 
 function connectToDatabase() {
-	console.info('Connecting to DB')
+	console.info('[SessionDB] Connecting')
 
-	let options: {
+	const options: {
 		host?: string;
 		port?: number;
 		password?: string;
@@ -74,21 +71,23 @@ function connectToDatabase() {
 	if (Boolean(username) && typeof username === 'string') options.username = username
 	if (tls) options.tls = {}
 
+	/* eslint-disable  */
 	// @ts-ignore
 	sessionDB = new Tedis(options)
+	/* eslint-enable */
 
 	sessionDB.command('SELECT', !isNaN(dbNumber) ? dbNumber : 0)
 
 
 	let dbError: Error
 
-	sessionDB.on('connect', () => console.log('SessionDB connected'))
+	sessionDB.on('connect', () => console.log('[SessionDB] connected'))
 	sessionDB.on('error', (error) => {
-		console.log(error)
+		console.log('[SessionDB]', error)
 		dbError = error
 	})
 	sessionDB.on('close', (had_error) => {
-		console.log('SessionDB closed', dbError && had_error ? dbError : 'Normal Closure')
+		console.log('[SessionDB] closed', dbError && had_error ? dbError : 'Normal Closure')
 		sessionDB = undefined
 		setTimeout(connectToDatabase, 300000)
 	})
@@ -114,6 +113,7 @@ function transformRawSession(rawSession: { [propName: string] :  string| number}
 	
 	
 	return {
+		id: typeof rawSession.id === 'string' ? rawSession.id : String(rawSession.id),
 		status: status(rawSession.status),
 		access_token: typeof rawSession.access_token === 'string' ? rawSession.access_token : String(rawSession.access_token),
 		valid_from: typeof rawSession.valid_from === 'string' ? rawSession.valid_from : String(rawSession.valid_from),
