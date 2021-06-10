@@ -2,6 +2,7 @@ import {Router, Request, Response, NextFunction } from 'express'
 import { user } from '#mock/user'
 import { apiError, ErrorTypes } from '#modules/errors'
 import { revokeSession, startNewSession } from '#modules/session/session'
+import { findUserByUsername } from '#modules/database/database'
 
 const auth: Router = Router()
 
@@ -16,11 +17,16 @@ export default auth
 async function handleTokenRequest(req: Request, res: Response, next: NextFunction) {
 	const { username, password } = req.body
 
-	// check login information -> should be checked in user DB instead of mock
-	if(username !== user.username || password !== user.password) return next(new apiError('Wrong username or password', ErrorTypes.login))
+	if(!username || !password ) return next(new apiError('No username or password supplied', ErrorTypes.login))
+
+	const user = await findUserByUsername(username)
+
+	if(!user) return next(new apiError('No user found', ErrorTypes.login))
+	
+	if(user.username !== username || user.password !== password) return next(new apiError('Wrong username or password', ErrorTypes.login))
 
 	try {
-		const session = await startNewSession()
+		const {id, ...session} = await startNewSession(user.id)
 		return res.json(session)
 	} catch(error) {
 		return next(error)

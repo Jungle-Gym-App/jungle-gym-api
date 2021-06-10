@@ -9,6 +9,7 @@ export enum SessionStatus {
 }
 export interface Session {
 	[propname: string]: string| number,
+	id: string
 	'status': SessionStatus,
 	'access_token': string,
 	'valid_from': string,
@@ -17,14 +18,12 @@ export interface Session {
 }
 
 
-
-
 /**
  * Start a new session 
  * @returns a newly started session
  */
-export async function startNewSession() : Promise<Session> {
-	const session: Session = createSession()
+export async function startNewSession(id: string) : Promise<Session> {
+	const session: Session = createSession(id)
 	await saveSession(session)
 	return session
 }
@@ -40,6 +39,15 @@ export async function revokeSession(accessToken: Session['access_token']) : Prom
 	else return
 }
 
+export async function retrieveSession(accessToken: Session['access_token']) : Promise<Session> {
+	return getSession(accessToken)
+}
+
+/**
+ * Checks if the session is active
+ * @param accessToken  the access token of the session to check
+ * @returns resolves when session is active, rejects if not active anymore
+ */
 export async function checkSession(accessToken: Session['access_token']) : Promise<void>{
 	const session = await getSession(accessToken)
 
@@ -50,7 +58,7 @@ export async function checkSession(accessToken: Session['access_token']) : Promi
 	}
 }
 
-function createSession() : Session{
+function createSession(id: string) : Session{
 	const accessToken = uuidv4()
 	const currentDateTime = Date.now()
 	const validFrom = new Date(currentDateTime)
@@ -58,10 +66,11 @@ function createSession() : Session{
 	const expireDate = new Date(currentDateTime + expiresIn)
 
 	const session: Session = {
+		id,
 		'status': SessionStatus.active,
 		'access_token': accessToken,
 		'valid_from': validFrom.toISOString(),
-		'expires_in': expiresIn ,
+		'expires_in': expiresIn,
 		'expires_on': expireDate.toISOString()
 	}
 

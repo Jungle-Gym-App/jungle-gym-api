@@ -113,6 +113,7 @@ function transformRawSession(rawSession: { [propName: string] :  string| number}
 	
 	
 	return {
+		id: typeof rawSession.id === 'string' ? rawSession.id : String(rawSession.id),
 		status: status(rawSession.status),
 		access_token: typeof rawSession.access_token === 'string' ? rawSession.access_token : String(rawSession.access_token),
 		valid_from: typeof rawSession.valid_from === 'string' ? rawSession.valid_from : String(rawSession.valid_from),

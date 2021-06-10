@@ -8,7 +8,7 @@ import user from '#routes/user'
 import cors from 'cors'
 import { apiError, ErrorTypes, handleErrors } from '#modules/errors'
 import { databaseStatus } from '#modules/database/database'
-import { checkSession } from '#modules/session/session'
+import { checkSession, retrieveSession } from '#modules/session/session'
 
 const api = express()
 
@@ -33,6 +33,7 @@ async function checkAccessToken(req: Request, res: Response, next: NextFunction)
 
 	try {
 		await checkSession(token)
+		res.locals.session = await retrieveSession(token)
 		return next()
 	} catch(error) {
 		next(error)

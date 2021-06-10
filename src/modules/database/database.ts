@@ -1,4 +1,7 @@
-import mongoose, { ConnectOptions } from 'mongoose'
+import UserSchema, { User } from '#models/user'
+import { apiError, ErrorTypes } from '#modules/errors'
+import mongoose, { ConnectOptions, Model, MongooseDocument } from 'mongoose'
+
 const { createConnection } =  mongoose
 
 const address = process.env.DB_ADDRESS
@@ -22,6 +25,7 @@ class Database {
 	private backOff = 0
 	uri: string;
 	options?: ConnectOptions
+	models: Map<string, Model<User>> = new Map()
 
 	constructor(uri: string, options?: ConnectOptions) {
 		this.uri = uri
@@ -50,6 +54,9 @@ class Database {
 	
 			if(this.connection instanceof mongoose.Connection) {
 				const {name, host} = this.connection
+
+				const userModel = this.connection.model<User>('User', UserSchema)
+				this.models.set('Users', userModel)
 	
 				this.connection.on('open', () => {
 					console.log(`[DB] connection with ${name} on ${host}`)			
@@ -79,3 +86,22 @@ database.connect()
 
 
 export const databaseStatus = () : boolean => database.ready
+
+
+export async function findUserByUsername(username: User['username']) : Promise<(User & mongoose.Document ) | null> {
+	const UserModel: Model<User> | undefined = database.models.get('Users')
+
+	if(UserModel) {
+		const currentUser = await UserModel.findOne({username}).exec()
+		return currentUser
+	} else return null
+}
+
+export async function findUserById(id: string) : Promise<(User & mongoose.Document ) | null> {
+	const UserModel: Model<User> | undefined = database.models.get('Users')
+
+	if(UserModel) {
+		const currentUser = await UserModel.findById(id).exec()
+		return currentUser
+	} else return null
+}
