@@ -1,4 +1,5 @@
-import { Connection, ConnectOptions, createConnection} from 'mongoose'
+import mongoose, { ConnectOptions } from 'mongoose'
+const { createConnection } =  mongoose
 
 const address = process.env.DB_ADDRESS
 const port = process.env.DB_PORT
@@ -17,7 +18,7 @@ const options: ConnectOptions = {
 }
 
 class Database {
-	private connection: Connection | Promise<Connection> | null = null
+	private connection: mongoose.Connection | null = null
 	private backOff = 0
 	uri: string;
 	options?: ConnectOptions
@@ -27,10 +28,14 @@ class Database {
 		this.options = options
 	}
 
-	connect(uri: string, options?: ConnectOptions) {
+	get ready() : boolean {
+		return this.connection?.readyState === 1 
+	}
+
+	connect() {
 		if(!uri && !this.uri) throw new Error('No uri specified')
 		else {
-			this.connection = createConnection(uri, options)
+			this.connection = createConnection(this.uri, this.options)
 			// Database Events 
 			// Rejection - only if initial connection failed (Mongoose will NOT attempt to reconnect)
 			if(this.connection instanceof Promise) {
@@ -41,8 +46,9 @@ class Database {
 					setTimeout(this.connect.bind(this), this.backOff++ * 1000 * 60)
 				})
 			}
+
 	
-			if(this.connection instanceof Connection) {
+			if(this.connection instanceof mongoose.Connection) {
 				const {name, host} = this.connection
 	
 				this.connection.on('open', () => {
@@ -68,3 +74,8 @@ class Database {
 }
 
 const database = new Database(uri, options)
+
+database.connect()
+
+
+export const databaseStatus = () : boolean => database.ready

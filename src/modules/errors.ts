@@ -41,6 +41,7 @@ export function handleErrors(error: ErrorRequestHandler, req: Request, res: Resp
 			res.status(500).json(error)
 		}
 	} else {
+		console.log(error)
 		res.status(500).json(new apiError('Internal server error', ErrorTypes.general))
 	}
 }

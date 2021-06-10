@@ -40,6 +40,16 @@ export async function revokeSession(accessToken: Session['access_token']) : Prom
 	else return
 }
 
+export async function checkSession(accessToken: Session['access_token']) : Promise<void>{
+	const session = await getSession(accessToken)
+
+	if(session.status !== SessionStatus.active) throw new apiError(`Session is ${session.status}`, ErrorTypes.session)
+	else if(isExpired(session.expires_on)) {
+		await deleteSession(accessToken, true)
+		throw new apiError('Session is expired', ErrorTypes.session)
+	}
+}
+
 function createSession() : Session{
 	const accessToken = uuidv4()
 	const currentDateTime = Date.now()
@@ -50,16 +60,16 @@ function createSession() : Session{
 	const session: Session = {
 		'status': SessionStatus.active,
 		'access_token': accessToken,
-		'valid_from': validFrom.toLocaleString(undefined, {timeZone: 'Europe/Amsterdam'}),
+		'valid_from': validFrom.toISOString(),
 		'expires_in': expiresIn ,
-		'expires_on': expireDate.toLocaleString(undefined, {timeZone: 'Europe/Amsterdam'})
+		'expires_on': expireDate.toISOString()
 	}
 
 	return session
 }
 
-// function isExpired(expiresOn: Session['expires_on']): boolean {
-// 	const expiresOnDate = new Date(expiresOn)
-// 	const nowDate = new Date(Date.now())
-// 	return nowDate > expiresOnDate
-// }
+function isExpired(expiresOn: Session['expires_on']): boolean {
+	const expiresOnDate = new Date(expiresOn)
+	const nowDate = new Date(Date.now())
+	return nowDate > expiresOnDate
+}
