@@ -21,6 +21,8 @@ async function handleTokenRequest(req: Request, res: Response, next: NextFunctio
 
 	const user = await findUserByUsername(username)
 
+	console.log(username, password, user)
+
 	if(!user) return next(new apiError('No user found', ErrorTypes.login))
 	
 	if(user.username !== username || user.password !== password) return next(new apiError('Wrong username or password', ErrorTypes.login))

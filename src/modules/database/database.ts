@@ -59,7 +59,7 @@ class Database {
 				this.models.set('Users', userModel)
 	
 				this.connection.on('open', () => {
-					console.log('[DB] connection', this.connection)			
+					console.log('[DB] connection open')			
 					this.backOff = 1
 				})
 		
@@ -93,6 +93,8 @@ export async function findUserByUsername(username: User['username']) : Promise<(
 
 	if(UserModel) {
 		const currentUser = await UserModel.findOne({username}).exec()
+
+		console.log('found', currentUser)
 		return currentUser
 	} else return null
 }
