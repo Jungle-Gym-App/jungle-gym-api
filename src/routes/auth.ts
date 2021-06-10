@@ -34,7 +34,7 @@ async function handleTokenRevocation(req: Request, res: Response, next: NextFunc
 
 	try {
 		await revokeSession(accessToken)
-		return res.status(200).json({})
+		return res.status(200).send()
 	} catch(error) {
 		return next(error)
 	}
