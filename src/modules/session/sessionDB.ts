@@ -7,7 +7,7 @@ const port: number | undefined = process.env.SESSION_DB_PORT ? Number(process.en
 const password: string | undefined = process.env.SESSION_DB_PASSWORD
 const username: string | undefined = process.env.SESSION_DB_USERNAME
 const tls: boolean = (process.env.SESSION_DB_TLS === 'true')
-const dbNumber: number = Number(process.env.SESSION_DB_NUMBER)
+const dbNumber = Number(process.env.SESSION_DB_NUMBER)
 
 
 console.log()
@@ -62,7 +62,7 @@ export function deleteSession(accessToken: Session['access_token'], expired = fa
 function connectToDatabase() {
 	console.info('Connecting to DB')
 
-	let options: {
+	const options: {
 		host?: string;
 		port?: number;
 		password?: string;
@@ -74,8 +74,10 @@ function connectToDatabase() {
 	if (Boolean(username) && typeof username === 'string') options.username = username
 	if (tls) options.tls = {}
 
+	/* eslint-disable  */
 	// @ts-ignore
 	sessionDB = new Tedis(options)
+	/* eslint-enable */
 
 	sessionDB.command('SELECT', !isNaN(dbNumber) ? dbNumber : 0)
 
