@@ -53,13 +53,13 @@ class Database {
 
 	
 			if(this.connection instanceof mongoose.Connection) {
-				const {name, host} = this.connection
+				
 
 				const userModel = this.connection.model<User>('User', UserSchema)
 				this.models.set('Users', userModel)
 	
 				this.connection.on('open', () => {
-					console.log(`[DB] connection with ${name} on ${host}`)			
+					console.log('[DB] connection', this.connection)			
 					this.backOff = 1
 				})
 		
