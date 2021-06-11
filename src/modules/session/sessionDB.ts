@@ -10,6 +10,7 @@ const tls: boolean = (process.env.SESSION_DB_TLS === 'true')
 const dbNumber = Number(process.env.SESSION_DB_NUMBER)
 
 let sessionDB: Tedis | undefined
+let backoff = 0
 
 connectToDatabase()
 
@@ -57,7 +58,7 @@ export function deleteSession(accessToken: Session['access_token'], expired = fa
 
 
 function connectToDatabase() {
-	console.info('[SessionDB] Connecting')
+	console.info('[SessionDB] Connecting in backoff')
 
 	const options: {
 		host?: string;
@@ -81,7 +82,10 @@ function connectToDatabase() {
 
 	let dbError: Error
 
-	sessionDB.on('connect', () => console.log('[SessionDB] connected'))
+	sessionDB.on('connect', () => {
+		backoff = 0
+		console.log('[SessionDB] connected')
+	})
 	sessionDB.on('error', (error) => {
 		console.log('[SessionDB]', error)
 		dbError = error
@@ -89,7 +93,8 @@ function connectToDatabase() {
 	sessionDB.on('close', (had_error) => {
 		console.log('[SessionDB] closed', dbError && had_error ? dbError : 'Normal Closure')
 		sessionDB = undefined
-		setTimeout(connectToDatabase, 300000)
+		if(backoff > 10) backoff = 10
+		setTimeout(connectToDatabase, backoff++ * 6000)
 	})
 }
 
