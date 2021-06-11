@@ -58,7 +58,7 @@ export function deleteSession(accessToken: Session['access_token'], expired = fa
 
 
 function connectToDatabase() {
-	console.info('[SessionDB] Connecting in backoff')
+	console.info(`[SessionDB] Connecting in ${backoff}`)
 
 	const options: {
 		host?: string;
