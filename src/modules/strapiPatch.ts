@@ -17,7 +17,7 @@ export function strapiPatchSingle(strapiGame: StrapiGame): Game {
 			: [],
 		rules: Array.isArray(strapiGame.rules) ? strapiGame.rules.map((a) => a.description) : [],
 		variation: gameVariation(strapiGame.variation),
-		highlighted: typeof strapiGame.highlighted === 'boolean' ? strapiGame.highlighted : '',
+		highlighted: typeof strapiGame.highlighted === 'boolean' ? strapiGame.highlighted : false,
 		updatedAt: strapiGame.updatedAt
 	}
 	return game
