@@ -6,7 +6,8 @@ export enum ErrorTypes {
 	login = 'INCORRECT_LOGIN',
 	token = 'INVALID_ACCESS_TOKEN',
 	session = 'INVALID_SESSION',
-	database = 'DATABASE_ERROR'
+	database = 'DATABASE_ERROR',
+	data = 'INVALID_DATA'
 }
 
 
@@ -30,6 +31,7 @@ export function handleErrors(error: ErrorRequestHandler, req: Request, res: Resp
 	if(error instanceof apiError) {
 		switch (error.type) {
 		case ErrorTypes.filter:
+		case ErrorTypes.data:
 			res.status(400).json(error)
 			break
 		case ErrorTypes.login:

@@ -4,7 +4,6 @@ import games from '#routes/games'
 import auth from '#routes/auth'
 import user from '#routes/user'
 
-
 import cors from 'cors'
 import { apiError, ErrorTypes, handleErrors } from '#modules/errors'
 import { databaseStatus } from '#modules/database/database'
@@ -34,8 +33,9 @@ async function checkAccessToken(req: Request, res: Response, next: NextFunction)
 	try {
 		await checkSession(token)
 		res.locals.session = await retrieveSession(token)
-		return next()
+		if(res.locals.session.id) return next()
+		else return next(new apiError('No user in session', ErrorTypes.session))
 	} catch(error) {
-		next(error)
+		return next(error)
 	}
 }
