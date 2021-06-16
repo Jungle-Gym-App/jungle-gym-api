@@ -32,10 +32,12 @@ export function strapiPatchSingle(strapiGame: StrapiGame): Game {
 				? strapiGame.highlighted
 				: false,
 		image: {
-			name: strapiGame.image.name ?? '',
-			url: `https://jungle-gym-cms.herokuapp.com${strapiGame.image.url}` ?? '',
-			width: strapiGame.image.width ?? '',
-			height: strapiGame.image.height ?? '',
+			name:
+				typeof strapiGame.image.name === 'string' ? strapiGame.image.name : '',
+			url:
+				typeof strapiGame.image.url === 'string'
+					? `https://jungle-gym-cms.herokuapp.com${strapiGame.image.url}`
+					: '',
 		},
 		updatedAt: strapiGame.updatedAt,
 	};
@@ -98,7 +100,7 @@ export interface StrapiGame {
 	rules?: { description: string }[];
 	variation?: { description: string; actions: [{ description: string }] };
 	highlighted: boolean;
-	image: { name: string; url: string; width: string; height: string };
+	image: { name: string; url: string };
 	updatedAt: string;
 	[key: string]: unknown;
 }
