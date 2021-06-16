@@ -33,9 +33,11 @@ export function strapiPatchSingle(strapiGame: StrapiGame): Game {
 				: false,
 		image: {
 			name:
-				typeof strapiGame.image.name === 'string' ? strapiGame.image.name : '',
+				typeof strapiGame.image.name === 'string' && strapiGame.image !== null
+					? strapiGame.image.name
+					: '',
 			url:
-				typeof strapiGame.image.url === 'string'
+				typeof strapiGame.image.url === 'string' && strapiGame.image !== null
 					? `https://jungle-gym-cms.herokuapp.com${strapiGame.image.url}`
 					: '',
 		},
