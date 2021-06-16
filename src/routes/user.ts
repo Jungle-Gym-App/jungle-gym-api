@@ -60,7 +60,7 @@ async function removeGameFromGymles(req: Request, res: Response, next: NextFunct
 	const userDocument: (User & Document) = res.locals.userDocument
 	const gamesToRemove = Array.isArray(req.body) ? req.body : [req.body]
 	const oldSavedGames = userDocument.savedGames
-	const newSavedGames = oldSavedGames.filter((savedGame) => gamesToRemove.includes(savedGame))
+	const newSavedGames = oldSavedGames.filter((savedGame) => !gamesToRemove.includes(savedGame))
 
 	userDocument.savedGames = newSavedGames
 
