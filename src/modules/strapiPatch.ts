@@ -1,7 +1,7 @@
-import { Game, Material, GameVariations, Category } from '#models/game';
+import { Game, Material, GameVariations } from '#models/game'
 
 export function strapiPatchAll(strapiGames: StrapiGame[]): Game[] {
-	return strapiGames.map(strapiPatchSingle);
+	return strapiGames.map(strapiPatchSingle)
 }
 
 export function strapiPatchSingle(strapiGame: StrapiGame): Game {
@@ -38,8 +38,8 @@ export function strapiPatchSingle(strapiGame: StrapiGame): Game {
 				: '',
 		},
 		updatedAt: strapiGame.updatedAt,
-	};
-	return game;
+	}
+	return game
 }
 
 function gameVariation(
@@ -54,12 +54,12 @@ function gameVariation(
 				const gameVariations: GameVariations = {
 					description: strapiVariation.description,
 					actions: strapiVariation.actions.map((action) => action.description),
-				};
+				}
 
-				return gameVariations;
+				return gameVariations
 			}
-		);
-	} else return [];
+		)
+	} else return []
 }
 
 function checkMaterial(strapiMaterials: StrapiGame['materials']): Material[] {
@@ -74,12 +74,12 @@ function checkMaterial(strapiMaterials: StrapiGame['materials']): Material[] {
 					name: strapiMaterial.material.name,
 					amount: strapiMaterial.amount ? strapiMaterial.amount : undefined,
 					notes: strapiMaterial.notes ? strapiMaterial.notes : undefined,
-				};
+				}
 
-				return gameMaterial;
+				return gameMaterial
 			}
-		);
-	} else return [];
+		)
+	} else return []
 }
 
 export interface StrapiGame {

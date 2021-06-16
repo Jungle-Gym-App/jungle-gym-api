@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { deleteSession, getSession, saveSession } from '#modules/session/sessionDB'
 import { ErrorTypes, apiError } from '#modules/errors'
 
+
 export enum SessionStatus {
 	active = 'active',
 	revoked = 'revoked',
@@ -48,7 +49,7 @@ export async function retrieveSession(accessToken: Session['access_token']) : Pr
  * @param accessToken  the access token of the session to check
  * @returns resolves when session is active, rejects if not active anymore
  */
-export async function checkSession(accessToken: Session['access_token']) : Promise<void>{
+export async function checkSession(accessToken: Session['access_token']) : Promise<void> {
 	const session = await getSession(accessToken)
 
 	if(session.status !== SessionStatus.active) throw new apiError(`Session is ${session.status}`, ErrorTypes.session)
