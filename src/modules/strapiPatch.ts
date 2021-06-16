@@ -1,7 +1,7 @@
-import { Game, Material, GameVariations, Category } from '#models/game'
+import { Game, Material, GameVariations, Category } from '#models/game';
 
 export function strapiPatchAll(strapiGames: StrapiGame[]): Game[] {
-	return strapiGames.map(strapiPatchSingle)
+	return strapiGames.map(strapiPatchSingle);
 }
 
 export function strapiPatchSingle(strapiGame: StrapiGame): Game {
@@ -9,78 +9,102 @@ export function strapiPatchSingle(strapiGame: StrapiGame): Game {
 		id: typeof strapiGame.id === 'string' ? strapiGame.id : '',
 		slug: typeof strapiGame.slug === 'string' ? strapiGame.slug : '',
 		name: typeof strapiGame.name === 'string' ? strapiGame.name : '',
-		description: typeof strapiGame.description === 'string' ? strapiGame.description : '',
-		category: typeof strapiGame.category.name === 'string' ? strapiGame.category.name : '',
+		description:
+			typeof strapiGame.description === 'string' ? strapiGame.description : '',
+		category:
+			typeof strapiGame.category.name === 'string'
+				? strapiGame.category.name
+				: '',
 		materials: checkMaterial(strapiGame.materials),
-		minimumPlayers: typeof strapiGame.minimumPlayers === 'string' ? Number(strapiGame.minimumPlayers) : undefined,
-		targetGroup: Array.isArray(strapiGame.targetGroup) ? strapiGame.targetGroup.map((a) => parseInt(a.group))
+		minimumPlayers:
+			typeof strapiGame.minimumPlayers === 'string'
+				? Number(strapiGame.minimumPlayers)
+				: undefined,
+		targetGroup: Array.isArray(strapiGame.targetGroup)
+			? strapiGame.targetGroup.map((a) => parseInt(a.group))
 			: [],
-		rules: Array.isArray(strapiGame.rules) ? strapiGame.rules.map((a) => a.description) : [],
+		rules: Array.isArray(strapiGame.rules)
+			? strapiGame.rules.map((a) => a.description)
+			: [],
 		variation: gameVariation(strapiGame.variation),
-		highlighted: typeof strapiGame.highlighted === 'boolean' ? strapiGame.highlighted : false,
-		updatedAt: strapiGame.updatedAt
-	}
-	return game
+		highlighted:
+			typeof strapiGame.highlighted === 'boolean'
+				? strapiGame.highlighted
+				: false,
+		image: {
+			name: strapiGame.image.name ?? '',
+			url: `https://jungle-gym-cms.herokuapp.com${strapiGame.image.url}` ?? '',
+			width: strapiGame.image.width ?? '',
+			height: strapiGame.image.height ?? '',
+		},
+		updatedAt: strapiGame.updatedAt,
+	};
+	return game;
 }
 
+function gameVariation(
+	strapiVariation: StrapiGame['variation']
+): GameVariations[] {
+	if (strapiVariation && Array.isArray(strapiVariation)) {
+		return strapiVariation.map(
+			(strapiVariation: {
+				description: string;
+				actions: [{ description: string }];
+			}) => {
+				const gameVariations: GameVariations = {
+					description: strapiVariation.description,
+					actions: strapiVariation.actions.map((action) => action.description),
+				};
 
-function gameVariation(strapiVariation: StrapiGame['variation']) : GameVariations[]  {
-	if(strapiVariation && Array.isArray(strapiVariation)) {
-		return strapiVariation.map((strapiVariation: { description: string, actions: [{description: string}]}) => {
-			const gameVariations: GameVariations = {
-				description: strapiVariation.description,
-				actions: strapiVariation.actions.map((action) => action.description)
+				return gameVariations;
 			}
-		
-			
-			return gameVariations
-		})
-	} else return []
+		);
+	} else return [];
 }
 
-
-function checkMaterial(strapiMaterials: StrapiGame['materials']) : Material[] {
+function checkMaterial(strapiMaterials: StrapiGame['materials']): Material[] {
 	if (Array.isArray(strapiMaterials)) {
 		return strapiMaterials.map(
 			(strapiMaterial: {
 				amount?: number | string | undefined;
 				notes?: string;
-				material: {name: string}
-			} ): Material => {
+				material: { name: string };
+			}): Material => {
 				const gameMaterial: Material = {
 					name: strapiMaterial.material.name,
 					amount: strapiMaterial.amount ? strapiMaterial.amount : undefined,
-					notes: strapiMaterial.notes ? strapiMaterial.notes : undefined
-				}
+					notes: strapiMaterial.notes ? strapiMaterial.notes : undefined,
+				};
 
-				return gameMaterial
+				return gameMaterial;
 			}
-		)
-	} else return []
+		);
+	} else return [];
 }
 
 export interface StrapiGame {
 	id: string;
 	slug: string;
-	name: string
-	description: string
-	category: {name: string}
+	name: string;
+	description: string;
+	category: { name: string };
 	materials: {
 		amount?: number | string | undefined;
 		notes?: string;
-		material: {name: string}
-	}[]
-	minimumPlayers: number
-	targetGroup: {group: string}[]
-	rules?: {description: string}[]
-	variation?: { description: string, actions: [{description: string}]}
-	highlighted: boolean
-	updatedAt: string
-	[key: string] : unknown
+		material: { name: string };
+	}[];
+	minimumPlayers: number;
+	targetGroup: { group: string }[];
+	rules?: { description: string }[];
+	variation?: { description: string; actions: [{ description: string }] };
+	highlighted: boolean;
+	image: { name: string; url: string; width: string; height: string };
+	updatedAt: string;
+	[key: string]: unknown;
 }
 
 export interface StrapiMaterial {
-	material: {name: string}
-	amount?: number | string
-	notes?: string
+	material: { name: string };
+	amount?: number | string;
+	notes?: string;
 }
